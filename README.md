@@ -1,141 +1,46 @@
-## Reference repo:
-https://github.com/c17hawke/dvc-ML-demo-AIOps
+# DVC ML Pipeline Demo for AIOps
 
-## wokflow -
-<img src="others/images/simple-workflow-01@2x.png" alt="workflow" width="70%">
+This project implements a machine learning pipeline using Data Version Control (DVC) to manage datasets and experiments effectively. The workflow consists of several key steps to set up a reproducible environment for machine learning tasks.
 
-# STEPS:
-## STEP 01: Create a empty remote repository
+## Workflow Steps
 
+1. **Create a Remote Repository**: 
+   - An empty remote repository is created on GitHub to store the project.
 
-## STEP 02: intialize a git local repository and connect to remote repository
+2. **Initialize a Git Local Repository**: 
+   - A new local Git repository is initialized, and a README file is created.
+   - The local repository is connected to the remote repository, and the initial commit is pushed to the main branch.
 
-* open and project folder in VS code then follow below command -
+3. **Set Up Environment**: 
+   - A Conda environment named `dvc-ml` is created and activated to manage dependencies.
 
-```bash
-echo "# dvc-ML-demo-AIOps" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/USER_NAME/REPO_NAME.git
-git push -u origin main
-```
+4. **Create a Setup File**: 
+   - A `setup.py` file is generated to define the package metadata and dependencies, including DVC, pandas, and scikit-learn.
 
-```bash
-touch .gitignore
-```
-content of the gitignore can be found from reference repository
+5. **Create Requirements File**: 
+   - A `requirements.txt` file is created to list the project dependencies, and they are installed.
 
+6. **Initialize DVC**: 
+   - The DVC tool is initialized in the project, enabling version control for datasets and machine learning models.
 
-## STEP 03: create and activate conda environment
+7. **Create Directory Structure**: 
+   - A basic directory structure is established, including directories for source code (`src`), utilities (`utils`), and configuration files (`config`).
 
-```bash
-conda create -n dvc-ml python=3.7 -y
-conda activate dvc-ml
-```
-## STEP 04: create a setup file
-```bash
-touch setup.py
-```
+8. **Create Configuration File**: 
+   - A `config.yml` file is created to define the data source and artifact directories, facilitating flexible configuration management.
 
-paste the below content in the setup.py file and make the necessary changes as per your user ID-
+9. **Stage 01: Load and Save Data**: 
+   - Python scripts for loading and saving data are created in the `src` directory. The utility functions are stored in `src/utils/all_utils.py`.
 
-```python
-from setuptools import setup
+10. **Create DVC Stages**: 
+    - A `dvc.yaml` file is created to define the first stage of the pipeline, which loads the data using the specified Python script. This includes the command, dependencies, and outputs.
 
-with open("README.md", "r", encoding="utf-8") as f:
-    long_description = f.read()
+11. **Run DVC Repro**: 
+    - The command `dvc repro` is executed to reproduce the pipeline, ensuring that all steps are carried out and outputs are generated as defined.
 
-setup(
-    name="src",
-    version="0.0.1",
-    author="USER_NAME",
-    description="A small package for dvc ml pipeline demo",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    url="https://github.com/c17hawke/dvc-ML-demo-AIOps",
-    author_email="sunny.c17hawke@gmail.com",
-    packages=["src"],
-    python_requires=">=3.7",
-    install_requires=[
-        'dvc',
-        'pandas',
-        'scikit-learn'
-    ]
-)
-```
+12. **Push Changes to Remote Repository**: 
+    - All changes are added to the Git staging area, committed, and pushed to the main branch of the remote repository, finalizing the initial setup of the ML pipeline.
 
+## Conclusion
 
-## STEP 05: create requirement file and install dependencies
-```bash
-touch requirements.txt
-pip install -r requirements.txt
-```
-content of requirements.txt - Refer the reference repository
-
-## STEP 06: initialize dvc
-```bash
-dvc init
-```
-
-## STEP 07: create the basic directory structure
-
-```bash
-mkdir -p src/utils config
-```
-## STEP 08: create the config file 
-```bash
-touch config/config.yml
-```
-content of config.yml - 
-
-```yaml
-
-data_source: http://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv
-
-artifacts: 
-  artifacts_dir: artifacts
-  raw_local_dir: raw_local_dir
-  raw_local_file: data.csv
-
-
-```
-
-
-## STEP 09: create the stage 01 python file and all_utils file:
-```bash
-touch src/stage_01_load_save.py src/utils/all_utils.py
-```
-content of both these files can be refererd from the reference given
-
-
-## STEP 10: create the dvc.yaml file and add the stage 01:
-```bash
-touch dvc.yaml
-```
-
-content of dvc.yaml file -
-```yaml
-stages:
-  load_data:
-    cmd: python src/stage_01_load_save.py --config=config/config.yaml
-    deps:
-      - src/stage_01_load_save.py
-      - src/utils/all_utils.py
-      - config/config.yaml
-    outs:
-      - artifacts/raw_local_dir/data.csv
-```
-
-## STEP 11: run the dvc repro command
-```bash
-dvc repo
-```
-
-## STEP 12: push the changes to remote repository
-```bash
-git add .
-git commit -m "stage 01 added"
-git push origin main
-```
+This project sets a solid foundation for managing machine learning projects through version control and reproducibility practices using DVC. Each step is carefully documented and structured, allowing for easy scalability and collaboration in the development of machine learning models.
